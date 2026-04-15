@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Segoe UI Variable";
+  src: local("Segoe UI Variable"), local("Segoe UI"), local("system-ui");
+}
+
+:root {
+  --font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-sans);
+}
+
+/* Fluent acrylic/glass effect */
+.fluent-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.fluent-glass-dark {
+  background: rgba(24, 24, 36, 0.82);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Fluent shadow */
+.fluent-shadow {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.fluent-shadow-lg {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.16);
+}
+
+/* Window title bar buttons — icon-based */
+.window-btn-icon {
+  width: 28px;
+  height: 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.window-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+.window-btn-icon-close:hover {
+  background: rgba(232, 60, 60, 0.85);
+  color: #fff;
+}
+.window-btn-icon-minimize:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+.window-btn-icon-maximize:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Desktop icon hover */
+.desktop-icon {
+  transition: background 0.15s;
+}
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.desktop-icon:active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Dock item hover */
+.dock-item {
+  transition: transform 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.dock-item:hover {
+  transform: translateY(-4px) scale(1.08);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
