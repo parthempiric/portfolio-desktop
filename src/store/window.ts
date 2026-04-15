@@ -3,8 +3,8 @@ import { create } from 'zustand'
 
 export const PAD_L = 5
 export const PAD_R = 5
-export const PAD_T = 40
-export const PAD_B = 50
+export const PAD_T = 37
+export const PAD_B = 64
 
 interface SavedBounds {
   x: number

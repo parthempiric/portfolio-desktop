@@ -2,7 +2,7 @@ import { memo, useRef, useCallback, useEffect, useSyncExternalStore } from 'reac
 import { X, Minus, Square, CopyMinus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { useWindowStore, type WindowState } from '@/store/window'
+import { PAD_T, useWindowStore, type WindowState } from '@/store/window'
 
 const MIN_W = 200
 const MIN_H = 120
@@ -93,7 +93,7 @@ export const Window = memo(function Window({
 
       const onMove = (ev: PointerEvent) => {
         const mx = ev.clientX - startX
-        const my = ev.clientY - startY
+        const my = Math.max(ev.clientY - startY, PAD_T)
         posRef.current = { x: mx, y: my }
         if (winRef.current) {
           winRef.current.style.left = `${mx}px`
@@ -117,7 +117,7 @@ export const Window = memo(function Window({
 
     const onMove = (ev: PointerEvent) => {
       const nx = ev.clientX - startX
-      const ny = ev.clientY - startY
+      const ny = Math.max(ev.clientY - startY, PAD_T)
       posRef.current = { x: nx, y: ny }
       if (winRef.current) {
         winRef.current.style.left = `${nx}px`
@@ -180,6 +180,8 @@ export const Window = memo(function Window({
           nh = Math.max(MIN_H, startH - dy)
           ny = startY + startH - nh
         }
+
+        ny = Math.max(ny, PAD_T)
 
         sizeRef.current = { w: nw, h: nh }
         posRef.current = { x: nx, y: ny }

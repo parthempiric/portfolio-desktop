@@ -1,16 +1,17 @@
 import { useEffect } from 'react'
-import { FileText, Info } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { WindowLayer } from '@/components/WindowLayer'
-import { Taskbar } from '@/components/Taskbar'
-import { FileApp } from '@/components/FileApp'
-import { AboutApp } from '@/components/AboutApp'
+import { TopPanel } from '@/components/TopPanel'
+import { Dock } from '@/components/Dock'
 import { useWindowStore } from '@/store/window'
+import { useSettingsStore, ACCENT_COLORS, applyAccent } from '@/store/settings'
+import { useTheme } from '@/components/theme-provider'
 
 function App() {
-  const createWindow = useWindowStore((s) => s.createWindow)
   const blurAll = useWindowStore((s) => s.blurAll)
   const clampToViewport = useWindowStore((s) => s.clampToViewport)
+  const wallpaper = useSettingsStore((s) => s.wallpaper)
+  const accentIndex = useSettingsStore((s) => s.accentIndex)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const onResize = () => clampToViewport(window.innerWidth, window.innerHeight)
@@ -18,34 +19,28 @@ function App() {
     return () => window.removeEventListener('resize', onResize)
   }, [clampToViewport])
 
+  useEffect(() => {
+    const isDark =
+      theme === 'dark' ||
+      (theme === 'system' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+    applyAccent(ACCENT_COLORS[accentIndex], isDark)
+  }, [theme, accentIndex])
+
   return (
     <div
-      className="relative h-svh w-full overflow-hidden"
+      className="relative h-svh w-full overflow-hidden bg-background bg-cover bg-center"
+      style={wallpaper ? { backgroundImage: `url(${wallpaper})` } : undefined}
       onPointerDown={blurAll}
     >
-      {/* Dashboard buttons */}
-      <div className="flex gap-3 p-4" onPointerDown={(e) => e.stopPropagation()}>
-        <Button
-          variant="outline"
-          onClick={() => createWindow('Files', FileApp)}
-        >
-          <FileText />
-          Open Files
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => createWindow('About', AboutApp)}
-        >
-          <Info />
-          Open About
-        </Button>
-      </div>
+      {/* GNOME top panel */}
+      <TopPanel />
 
       {/* Window layer */}
       <WindowLayer />
 
-      {/* Taskbar */}
-      <Taskbar />
+      {/* GNOME dock */}
+      <Dock />
     </div>
   )
 }
