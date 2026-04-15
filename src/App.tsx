@@ -1,69 +1,121 @@
-import { useCallback } from "react";
-import TopPanel from "./components/TopPanel";
-import Dock from "./components/Dock";
-import Desktop from "./components/Desktop";
-import WindowLayer from "./components/WindowLayer";
-import TextEditor from "./components/TextEditor";
-import FolderView from "./components/FolderView";
-import TerminalApp from "./components/TerminalApp";
-import BrowserApp from "./components/BrowserApp";
-import SettingsApp from "./components/SettingsApp";
-import AboutApp from "./components/AboutApp";
-import { useWindowStore } from "./store/windowStore";
-import type { DesktopItem } from "./data/desktopItems";
-import type { ComponentType } from "react";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png'
+import './App.css'
 
-export default function App() {
-  const createWindow = useWindowStore((s) => s.createWindow);
-
-  const handleDesktopItemClick = useCallback(
-    (item: DesktopItem) => {
-      if (item.type === "file") {
-        createWindow(
-          item.name,
-          TextEditor,
-          { fileName: item.name, initialContent: item.content ?? "" },
-          { width: 550, height: 420 }
-        );
-      } else if (item.type === "folder") {
-        createWindow(item.name, FolderView, {}, { width: 400, height: 350 });
-      }
-    },
-    [createWindow]
-  );
-
-  const handleDockAppClick = useCallback(
-    (appId: string) => {
-      const appMap: Record<string, { name: string; component: ComponentType; w: number; h: number }> = {
-        terminal: { name: "Terminal", component: TerminalApp, w: 520, h: 360 },
-        browser: { name: "Browser", component: BrowserApp, w: 600, h: 450 },
-        settings: { name: "Settings", component: SettingsApp, w: 400, h: 380 },
-        about: { name: "About", component: AboutApp, w: 360, h: 340 },
-      };
-
-      const config = appMap[appId];
-      if (config) {
-        createWindow(config.name, config.component, {}, {
-          width: config.w,
-          height: config.h,
-          appId,
-        });
-      }
-    },
-    [createWindow]
-  );
+function App() {
+  const [count, setCount] = useState(0)
 
   return (
-    <div
-      className="relative w-full h-screen overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: "url('/wallpaper.jpg')",
-      }}
-    >
-      <TopPanel />
-      <Desktop onItemClick={handleDesktopItemClick} />
-      <WindowLayer />
-      <Dock onAppClick={handleDockAppClick} />
-    </div>
-  );
+    <>
+      <section id="center">
+        <div className="hero">
+          <img src={heroImg} className="base" width="170" height="179" alt="" />
+          <img src={reactLogo} className="framework" alt="React logo" />
+          <img src={viteLogo} className="vite" alt="Vite logo" />
+        </div>
+        <div>
+          <h1>Get started</h1>
+          <p>
+            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+          </p>
+        </div>
+        <button
+          className="counter"
+          onClick={() => setCount((count) => count + 1)}
+        >
+          Count is {count}
+        </button>
+      </section>
+
+      <div className="ticks"></div>
+
+      <section id="next-steps">
+        <div id="docs">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#documentation-icon"></use>
+          </svg>
+          <h2>Documentation</h2>
+          <p>Your questions, answered</p>
+          <ul>
+            <li>
+              <a href="https://vite.dev/" target="_blank">
+                <img className="logo" src={viteLogo} alt="" />
+                Explore Vite
+              </a>
+            </li>
+            <li>
+              <a href="https://react.dev/" target="_blank">
+                <img className="button-icon" src={reactLogo} alt="" />
+                Learn more
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="social">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#social-icon"></use>
+          </svg>
+          <h2>Connect with us</h2>
+          <p>Join the Vite community</p>
+          <ul>
+            <li>
+              <a href="https://github.com/vitejs/vite" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#github-icon"></use>
+                </svg>
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a href="https://chat.vite.dev/" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#discord-icon"></use>
+                </svg>
+                Discord
+              </a>
+            </li>
+            <li>
+              <a href="https://x.com/vite_js" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#x-icon"></use>
+                </svg>
+                X.com
+              </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/vite.dev" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#bluesky-icon"></use>
+                </svg>
+                Bluesky
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <div className="ticks"></div>
+      <section id="spacer"></section>
+    </>
+  )
 }
+
+export default App
