@@ -1,4 +1,4 @@
-import { Monitor, Moon, Sun } from 'lucide-react'
+import { Monitor, Moon, Sun, Type, Code2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/theme-provider'
@@ -7,12 +7,20 @@ import {
   ACCENT_COLORS,
   WALLPAPERS,
   applyAccent,
+  applyFontMode,
+  type FontMode,
 } from '@/store/settings'
 
 export function SettingsApp() {
   const { theme, setTheme } = useTheme()
-  const { wallpaper, setWallpaper, accentIndex, setAccentIndex } =
-    useSettingsStore()
+  const {
+    wallpaper,
+    setWallpaper,
+    accentIndex,
+    setAccentIndex,
+    fontMode,
+    setFontMode,
+  } = useSettingsStore()
 
   const isDark =
     theme === 'dark' ||
@@ -31,6 +39,11 @@ export function SettingsApp() {
       (t === 'system' &&
         window.matchMedia('(prefers-color-scheme: dark)').matches)
     applyAccent(ACCENT_COLORS[accentIndex], willBeDark)
+  }
+
+  const handleFont = (mode: FontMode) => {
+    setFontMode(mode)
+    applyFontMode(mode)
   }
 
   return (
@@ -75,6 +88,37 @@ export function SettingsApp() {
             />
           ))}
         </div>
+      </section>
+
+      {/* Font */}
+      <section className="space-y-2">
+        <h3 className="font-semibold">Font</h3>
+        <div className="flex gap-2">
+          {([
+            { value: 'sans', icon: Type, label: 'Sans', preview: 'Aa' },
+            { value: 'mono', icon: Code2, label: 'Mono', preview: 'Aa' },
+          ] as const).map(({ value, icon: Icon, label, preview }) => (
+            <Button
+              key={value}
+              variant={fontMode === value ? 'default' : 'outline'}
+              onClick={() => handleFont(value)}
+            >
+              <Icon className="size-3.5" />
+              {label}
+              <span
+                className={cn(
+                  'ml-1 text-xs opacity-70',
+                  value === 'mono' && 'font-mono',
+                )}
+              >
+                {preview}
+              </span>
+            </Button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Mono switches the entire UI to JetBrains Mono.
+        </p>
       </section>
 
       {/* Wallpaper */}

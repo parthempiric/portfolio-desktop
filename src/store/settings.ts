@@ -23,11 +23,15 @@ export const WALLPAPERS = [
   { name: 'None', url: '' },
 ]
 
+export type FontMode = 'sans' | 'mono'
+
 interface SettingsStore {
   wallpaper: string
   accentIndex: number
+  fontMode: FontMode
   setWallpaper: (url: string) => void
   setAccentIndex: (index: number) => void
+  setFontMode: (mode: FontMode) => void
 }
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -35,12 +39,19 @@ export const useSettingsStore = create<SettingsStore>()(
     (set) => ({
       wallpaper: '/default.jpg',
       accentIndex: 0,
+      fontMode: 'sans',
       setWallpaper: (url) => set({ wallpaper: url }),
       setAccentIndex: (index) => set({ accentIndex: index }),
+      setFontMode: (mode) => set({ fontMode: mode }),
     }),
     { name: 'desktop-settings' },
   ),
 )
+
+export function applyFontMode(mode: FontMode) {
+  const root = document.documentElement
+  root.classList.toggle('font-mono-mode', mode === 'mono')
+}
 
 export function applyAccent(accent: AccentColor, isDark: boolean) {
   const color = isDark ? accent.dark : accent.light

@@ -10,8 +10,15 @@ export function TerminalApp() {
   useEffect(() => {
     if (!terminalRef.current) return
 
+    // Read terminal font family from CSS variable so it matches app theme
+    const fontFamily =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--font-terminal')
+        .trim() ||
+      '"JetBrainsMono Nerd Font", "JetBrains Mono Variable", "FiraCode Nerd Font", monospace'
+
     const term = new XTerm({
-      fontFamily: '"FiraCode Nerd Font", "MesloLGS NF", "Hack Nerd Font", "JetBrainsMono Nerd Font", "Droid Sans Mono for Powerline", monospace',
+      fontFamily,
       fontSize: 14,
       cursorBlink: true,
       theme: {
@@ -85,7 +92,7 @@ export function TerminalApp() {
   }, [])
 
   return (
-    <div className="size-full overflow-hidden bg-[#282a36] focus:outline-none">
+    <div className="terminal-font size-full overflow-hidden bg-[#282a36] focus:outline-none p-3">
       <div ref={terminalRef} className="size-full outline-none" />
     </div>
   )

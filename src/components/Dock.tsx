@@ -1,11 +1,18 @@
 import type { ComponentType } from 'react'
-import { FileText, Info, Settings, Terminal } from 'lucide-react'
+import { FileText, Info, Settings, Terminal, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useWindowStore } from '@/store/window'
 import { FileApp } from '@/components/FileApp'
 import { AboutApp } from '@/components/AboutApp'
 import { SettingsApp } from '@/components/SettingsApp'
 import { TerminalApp } from '@/components/TerminalApp'
+import { ResumeApp } from '@/components/ResumeApp'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 interface DockItem {
   title: string
@@ -20,9 +27,10 @@ interface DockItem {
 
 const DOCK_ITEMS: DockItem[] = [
   { title: 'Files', icon: FileText, Component: FileApp },
+  { title: 'Resume', icon: User, Component: ResumeApp, size: { width: 720, height: 640 } },
   { title: 'Terminal', icon: Terminal, Component: TerminalApp, size: { width: 700, height: 450 } },
   { title: 'About', icon: Info, Component: AboutApp, maximiable: false },
-  { title: 'Settings', icon: Settings, Component: SettingsApp, size: { width: 600, height: 400 } },
+  { title: 'Settings', icon: Settings, Component: SettingsApp, size: { width: 600, height: 460 } },
 ]
 
 export function Dock() {
@@ -64,53 +72,55 @@ export function Dock() {
   }
 
   return (
-    <div
-      className="absolute bottom-[5px] left-1/2 z-9999 flex -translate-x-1/2 items-end gap-1 rounded-lg border border-border bg-card px-2 py-1.5"
-      onPointerDown={(e) => e.stopPropagation()}
-    >
-      {DOCK_ITEMS.map((item) => {
-        const running = windows.filter((w) => w.title === item.title)
-        const isActive = running.some((w) => w.id === focusedId && !w.minimized)
-        const Icon = item.icon
+    <TooltipProvider delay={0}>
+      <div
+        className="absolute bottom-[5px] left-1/2 z-9999 flex -translate-x-1/2 items-end gap-1 rounded-lg border border-border bg-card px-2 py-1.5"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        {DOCK_ITEMS.map((item) => {
+          const running = windows.filter((w) => w.title === item.title)
+          const isActive = running.some((w) => w.id === focusedId && !w.minimized)
+          const Icon = item.icon
 
-        return (
-          <button
-            key={item.title}
-            onClick={() => handleClick(item)}
-            title={item.title}
-            className={cn(
-              'cursor-pointer group relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
-              isActive
-                ? 'bg-primary/15 text-primary'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-            )}
-          >
-            <Icon className="size-5" />
-
-            {/* Running indicator dots */}
-            {running.length > 0 && (
-              <div className="absolute -bottom-0.5 flex gap-0.5">
-                {running.slice(0, 3).map((w) => (
-                  <span
-                    key={w.id}
+          return (
+            <Tooltip key={item.title}>
+              <TooltipTrigger
+                render={
+                  <button
+                    onClick={() => handleClick(item)}
                     className={cn(
-                      'size-1 rounded-full',
-                      w.id === focusedId && !w.minimized
-                        ? 'bg-primary'
-                        : 'bg-muted-foreground',
+                      'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
+                      isActive
+                        ? 'bg-primary/15 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                     )}
-                  />
-                ))}
-              </div>
-            )}
+                  >
+                    <Icon className="size-5" />
 
-            {/* Tooltip */}
-            <span className="pointer-events-none absolute -top-8 rounded-md bg-popover px-2 py-1 text-[10px] text-popover-foreground border border-border opacity-0 transition-opacity group-hover:opacity-100">
-              {item.title}
-            </span>
-          </button>
-        )
-      })}
-    </div>
+                    {/* Running indicator dots */}
+                    {running.length > 0 && (
+                      <div className="absolute -bottom-0.5 flex gap-0.5">
+                        {running.slice(0, 3).map((w) => (
+                          <span
+                            key={w.id}
+                            className={cn(
+                              'size-1 rounded-full',
+                              w.id === focusedId && !w.minimized
+                                ? 'bg-primary'
+                                : 'bg-muted-foreground',
+                            )}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                }
+              />
+              <TooltipContent sideOffset={8}>{item.title}</TooltipContent>
+            </Tooltip>
+          )
+        })}
+      </div>
+    </TooltipProvider>
   )
 }

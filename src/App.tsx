@@ -2,8 +2,14 @@ import { useEffect } from 'react'
 import { WindowLayer } from '@/components/WindowLayer'
 import { TopPanel } from '@/components/TopPanel'
 import { Dock } from '@/components/Dock'
+import { Splash } from '@/components/Splash'
 import { useWindowStore } from '@/store/window'
-import { useSettingsStore, ACCENT_COLORS, applyAccent } from '@/store/settings'
+import {
+  useSettingsStore,
+  ACCENT_COLORS,
+  applyAccent,
+  applyFontMode,
+} from '@/store/settings'
 import { useTheme } from '@/components/theme-provider'
 
 function App() {
@@ -11,7 +17,12 @@ function App() {
   const clampToViewport = useWindowStore((s) => s.clampToViewport)
   const wallpaper = useSettingsStore((s) => s.wallpaper)
   const accentIndex = useSettingsStore((s) => s.accentIndex)
+  const fontMode = useSettingsStore((s) => s.fontMode)
   const { theme } = useTheme()
+
+  useEffect(() => {
+    applyFontMode(fontMode)
+  }, [fontMode])
 
   useEffect(() => {
     const onResize = () => clampToViewport(window.innerWidth, window.innerHeight)
@@ -41,6 +52,9 @@ function App() {
 
       {/* GNOME dock */}
       <Dock />
+
+      {/* Boot splash */}
+      <Splash />
     </div>
   )
 }
