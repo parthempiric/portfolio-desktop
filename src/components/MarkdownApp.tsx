@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import mermaid from 'mermaid'
+import { parse as parseToml } from 'smol-toml'
 
 mermaid.initialize({ startOnLoad: false, theme: 'default' })
 
@@ -53,6 +54,82 @@ function GoatBlock({ code }: { code: string }) {
   return <div ref={ref} className="my-4 flex justify-center [&_svg]:max-w-full" />
 }
 
+interface FrontMatter {
+  title?: string
+  description?: string
+  author?: string
+  date?: string
+  cover?: string
+  tags?: string[]
+  keywords?: string[]
+  draft?: boolean
+}
+
+function parseFrontMatter(raw: string): { frontMatter: FrontMatter | null; body: string } {
+  const tomlMatch = raw.match(/^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?/)
+  if (tomlMatch) {
+    try {
+      const fm = parseToml(tomlMatch[1]) as unknown as FrontMatter
+      return { frontMatter: fm, body: raw.slice(tomlMatch[0].length) }
+    } catch {
+      return { frontMatter: null, body: raw }
+    }
+  }
+  return { frontMatter: null, body: raw }
+}
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  } catch {
+    return dateStr
+  }
+}
+
+function resolveImageUrl(src: string): string {
+  if (src.startsWith('http')) return src
+  return `${import.meta.env.VITE_API_BASE_URL}/api/files/serve/${src.replace(/^\//, '')}`
+}
+
+function PostHeader({ fm }: { fm: FrontMatter }) {
+  return (
+    <header className="mb-8 space-y-4">
+      {fm.title && (
+        <h1 className="text-[1.45em] font-semibold text-foreground leading-tight">{fm.title}</h1>
+      )}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+        {fm.author && <span>by <span className="text-foreground font-medium">{fm.author}</span></span>}
+        {fm.date && <span>{formatDate(fm.date)}</span>}
+        {fm.draft && <span className="border border-primary/50 text-primary px-1.5 py-0.5">draft</span>}
+      </div>
+      {fm.cover && (
+        <img
+          src={resolveImageUrl(fm.cover)}
+          alt={fm.title || ''}
+          className="w-full max-h-80 object-cover border-2 border-primary overflow-hidden"
+        />
+      )}
+      {fm.description && (
+        <p className="text-muted-foreground italic">{fm.description}</p>
+      )}
+      {fm.tags && fm.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {fm.tags.map((tag) => (
+            <span key={tag} className="border-t border-x border-primary/25 border-b-[3px] border-b-primary rounded bg-foreground/5 px-2 py-0.5 text-[11px] text-foreground">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      <hr className="border-none bg-primary h-0.5" />
+    </header>
+  )
+}
+
 export function MarkdownAppBase({ filePath, fileName }: { filePath: string; fileName: string }) {
 
   useEffect(() => {
@@ -62,7 +139,7 @@ export function MarkdownAppBase({ filePath, fileName }: { filePath: string; file
     }
   }, [])
 
-  const [content, setContent] = useState('')
+  const [rawContent, setRawContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -75,7 +152,7 @@ export function MarkdownAppBase({ filePath, fileName }: { filePath: string; file
         return res.text()
       })
       .then((text) => {
-        setContent(text)
+        setRawContent(text)
         setLoading(false)
       })
       .catch((err) => {
@@ -83,6 +160,8 @@ export function MarkdownAppBase({ filePath, fileName }: { filePath: string; file
         setLoading(false)
       })
   }, [filePath])
+
+  const { frontMatter, body: content } = useMemo(() => parseFrontMatter(rawContent), [rawContent])
 
   const renderCode = useCallback(
     (props: React.ComponentProps<'code'> & { className?: string; children?: React.ReactNode }) => {
@@ -135,6 +214,7 @@ export function MarkdownAppBase({ filePath, fileName }: { filePath: string; file
 
   return (
     <div className="max-w-3xl space-y-4 p-6 text-sm leading-relaxed">
+      {frontMatter && <PostHeader fm={frontMatter} />}
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
