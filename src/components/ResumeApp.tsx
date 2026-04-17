@@ -1,135 +1,13 @@
-import { Mail, Phone, Globe, MapPin } from 'lucide-react'
-
-interface ExperienceItem {
-  role: string
-  company: string
-  period: string
-  location: string
-  bullets: string[]
-}
-
-interface ProjectItem {
-  name: string
-  bullets: string[]
-}
-
-interface EducationItem {
-  degree: string
-  school: string
-  period: string
-}
-
-interface SkillGroup {
-  label: string
-  items: string[]
-}
-
-const SUMMARY =
-  'Backend & Microservices Developer with 2.5+ years of experience designing and building scalable, high-performance backend systems and distributed architectures. Strong expertise in Go, Node.js, and event-driven systems, with hands-on experience in AWS cloud infrastructure, queue-based processing, and real-time data pipelines. Proven ability to deliver production-grade systems, optimize performance, and handle high-throughput workloads across multi-tenant environments.'
-
-const EXPERIENCE: ExperienceItem[] = [
-  {
-    role: 'Back-End and Micro-Services Developer',
-    company: 'Empiric Infotech LLP',
-    period: 'Jul 2025 – Present',
-    location: 'Surat, Gujarat',
-    bullets: [
-      'Built a multi-tenant ATS (SaaS) platform replacing legacy systems with improved scalability.',
-      'Designed tenant isolation, sharding, and Elasticsearch pipelines for large-scale data handling.',
-      'Developed microservices using Node.js and Docker, deployed on AWS (ECS, SQS, SNS, EC2, Lambda).',
-      'Implemented event-driven architectures for reliable async processing.',
-    ],
-  },
-  {
-    role: 'GoLang Developer',
-    company: 'Pretestar OPC.',
-    period: 'Jul 2024 – May 2025',
-    location: 'India',
-    bullets: [
-      'Built SMTP server and client as independent microservices using Go.',
-      'Designed scalable email delivery system with queue-based processing and spam filtering.',
-      'Optimized concurrency for high-throughput email processing.',
-    ],
-  },
-  {
-    role: 'Full-Stack Developer',
-    company: 'Codeverse Weenggs',
-    period: 'Mar 2024 – May 2024',
-    location: 'Surat, Gujarat',
-    bullets: [
-      'Processed 5,000–7,000 data points/min from 3,000+ machines.',
-      'Built multi-tenant backend systems with high-throughput queue processing.',
-    ],
-  },
-  {
-    role: 'Full-Stack Developer',
-    company: 'Leven Plus',
-    period: 'Jun 2023 – Dec 2023',
-    location: 'Surat, Gujarat',
-    bullets: [
-      'Developed ERP system with RFID-based attendance automation.',
-      'Built CanvasLib and implemented Docker + CI/CD workflows.',
-    ],
-  },
-]
-
-const SKILLS: SkillGroup[] = [
-  { label: 'Languages', items: ['JavaScript', 'TypeScript', 'Go', 'Python', 'C'] },
-  {
-    label: 'Backend',
-    items: ['Node.js', 'Microservices', 'REST APIs', 'Distributed Systems', 'RAG'],
-  },
-  { label: 'Frontend', items: ['React', 'Next.js'] },
-  {
-    label: 'Databases',
-    items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Elasticsearch', 'Chroma'],
-  },
-  { label: 'Messaging', items: ['RabbitMQ', 'Kafka'] },
-  { label: 'Cloud', items: ['AWS — ECS, EC2, SQS, SNS, VPC, Lambda'] },
-  { label: 'DevOps', items: ['Docker', 'CI/CD', 'Jenkins', 'Linux'] },
-]
-
-const PROJECTS: ProjectItem[] = [
-  {
-    name: 'My Ayur — Healthcare Platform',
-    bullets: [
-      'Designed microservices backend with 4–5 independent services using Node.js and Docker.',
-      'Implemented event-driven workflows handling 20k+ notifications/day using AWS SNS and SQS.',
-      'Reduced API response time by 40–50% using Redis caching.',
-      'Built CI/CD pipelines with GitHub Actions and AWS for automated deployment.',
-      'Implemented secure authentication using JWT and RBAC.',
-    ],
-  },
-  {
-    name: 'Box SMTP Server & Levify Mail',
-    bullets: [
-      'Built a custom SMTP server and email client with real-time capabilities.',
-      'Designed queue-based architecture using Go and RabbitMQ.',
-      'Enabled scalable email delivery and tracking system.',
-    ],
-  },
-  {
-    name: 'Multi-Tenant ATS (SaaS)',
-    bullets: [
-      'Developed scalable SaaS platform with tenant isolation and sharding.',
-      'Integrated Elasticsearch pipelines for fast and efficient querying.',
-      'Designed system to handle large-scale multi-client workloads.',
-    ],
-  },
-]
-
-const EDUCATION: EducationItem[] = [
-  {
-    degree: 'B.Tech in Information Technology',
-    school: 'Bhagwan Mahavir University',
-    period: '2023 – 2026',
-  },
-  {
-    degree: 'Diploma in Information Technology',
-    school: 'Uka Tarsadia University',
-    period: '2020 – 2023',
-  },
-]
+import { LuMail, LuPhone, LuGlobe, LuMapPin } from 'react-icons/lu'
+import { FaGithub, FaLinkedin } from 'react-icons/fa6'
+import {
+  PORTFOLIO_CONFIG,
+  SUMMARY,
+  EXPERIENCE,
+  SKILLS,
+  PROJECTS,
+  EDUCATION,
+} from '@/config/resume.config'
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -148,43 +26,57 @@ export function ResumeApp() {
       {/* Header — title left aligned */}
       <header className="space-y-2">
         <h1 className="font-serif text-3xl font-semibold italic leading-none tracking-tight text-primary pb-1">
-          Parth Degama
+          {PORTFOLIO_CONFIG.name}
         </h1>
         <p className=" text-sm font-medium text-foreground">
-          Software Engineer
+          {PORTFOLIO_CONFIG.title}
         </p>
         <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground">
           <li className="flex items-center gap-1.5">
-            <Phone className="size-3 text-primary" />
-            +91 8866881066
+            <LuPhone className="size-3 text-primary" />
+            {PORTFOLIO_CONFIG.contact.phone}
           </li>
           <li className="flex items-center gap-1.5">
-            <Mail className="size-3 text-primary" />
+            <LuMail className="size-3 text-primary" />
             <a
-              href="mailto:hello@parthdegama.site"
+              href={`mailto:${PORTFOLIO_CONFIG.contact.email}`}
               className="hover:text-foreground"
             >
-              hello@parthdegama.site
+              {PORTFOLIO_CONFIG.contact.email}
             </a>
           </li>
           <li className="flex items-center gap-1.5">
-            <Globe className="size-3 text-primary" />
+            <LuGlobe className="size-3 text-primary" />
             <a
-              href="https://parthdegama.site"
+              href={PORTFOLIO_CONFIG.contact.websiteUrl}
               target="_blank"
               rel="noreferrer"
               className="hover:text-foreground"
             >
-              parthdegama.site
+              {PORTFOLIO_CONFIG.contact.website}
             </a>
           </li>
           <li className="flex items-center gap-1.5">
-            {/* <Github className="size-3 text-primary" /> */}
-            github.com
+            <FaGithub className="size-3 text-primary" />
+            <a
+              href={PORTFOLIO_CONFIG.socialLinks.github}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground"
+            >
+              github.com
+            </a>
           </li>
           <li className="flex items-center gap-1.5">
-            {/* <Linkedin className="size-3 text-primary" /> */}
-            linkedin.com
+            <FaLinkedin className="size-3 text-primary" />
+            <a
+              href={PORTFOLIO_CONFIG.socialLinks.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground"
+            >
+              linkedin.com
+            </a>
           </li>
         </ul>
       </header>
@@ -209,7 +101,7 @@ export function ResumeApp() {
                 <div className="text-right text-[11px] text-muted-foreground">
                   <div>{exp.period}</div>
                   <div className="flex items-center justify-end gap-1">
-                    <MapPin className="size-3" />
+                    <LuMapPin className="size-3" />
                     {exp.location}
                   </div>
                 </div>

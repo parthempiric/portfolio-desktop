@@ -1,4 +1,4 @@
-import { Monitor, Moon, Sun, Type, Code2 } from 'lucide-react'
+import { LuMonitor, LuMoon, LuSun, LuType, LuCode } from 'react-icons/lu'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/theme-provider'
@@ -53,9 +53,9 @@ export function SettingsApp() {
         <h3 className="font-semibold">Theme</h3>
         <div className="flex gap-2">
           {([
-            { value: 'light', icon: Sun, label: 'Light' },
-            { value: 'dark', icon: Moon, label: 'Dark' },
-            { value: 'system', icon: Monitor, label: 'System' },
+            { value: 'light', icon: LuSun, label: 'Light' },
+            { value: 'dark', icon: LuMoon, label: 'Dark' },
+            { value: 'system', icon: LuMonitor, label: 'System' },
           ] as const).map(({ value, icon: Icon, label }) => (
             <Button
               key={value}
@@ -95,8 +95,8 @@ export function SettingsApp() {
         <h3 className="font-semibold">Font</h3>
         <div className="flex gap-2">
           {([
-            { value: 'sans', icon: Type, label: 'Sans', preview: 'Aa' },
-            { value: 'mono', icon: Code2, label: 'Mono', preview: 'Aa' },
+            { value: 'sans', icon: LuType, label: 'Sans', preview: 'Aa' },
+            { value: 'mono', icon: LuCode, label: 'Mono', preview: 'Aa' },
           ] as const).map(({ value, icon: Icon, label, preview }) => (
             <Button
               key={value}

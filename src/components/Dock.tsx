@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { FileText, Info, Settings, Terminal, User } from 'lucide-react'
+import { LuFileText, LuInfo, LuSettings, LuTerminal, LuUser } from 'react-icons/lu'
 import { cn } from '@/lib/utils'
 import { useWindowStore } from '@/store/window'
 import { FileApp } from '@/components/FileApp'
@@ -16,9 +16,13 @@ import {
 
 interface DockItem {
   title: string
-  icon: typeof FileText
+  icon: ComponentType<{ className?: string }>
   Component: ComponentType<Record<string, unknown>>,
   size?: {
+    width: number
+    height: number
+  },
+  minSize?: {
     width: number
     height: number
   },
@@ -27,11 +31,11 @@ interface DockItem {
 }
 
 const DOCK_ITEMS: DockItem[] = [
-  { title: 'Files', icon: FileText, Component: FileApp, padding: false },
-  { title: 'Resume', icon: User, Component: ResumeApp, size: { width: 720, height: 640 } },
-  { title: 'Terminal', icon: Terminal, Component: TerminalApp, size: { width: 700, height: 450 }, padding: false },
-  { title: 'About', icon: Info, Component: AboutApp, maximiable: false },
-  { title: 'Settings', icon: Settings, Component: SettingsApp, size: { width: 600, height: 460 } },
+  { title: 'Files', icon: LuFileText, Component: FileApp, padding: false, size: { width: 900, height: 660 }, minSize: { width: 400, height: 300 } },
+  { title: 'Resume', icon: LuUser, Component: ResumeApp, size: { width: 720, height: 640 }, minSize: { width: 400, height: 300 } },
+  { title: 'Terminal', icon: LuTerminal, Component: TerminalApp, size: { width: 700, height: 450 }, padding: false, minSize: { width: 300, height: 200 } },
+  { title: 'About', icon: LuInfo, Component: AboutApp, maximiable: false, size: { width: 280, height: 450 }, minSize: { width: 250, height: 200 } },
+  { title: 'Settings', icon: LuSettings, Component: SettingsApp, size: { width: 600, height: 460 }, minSize: { width: 350, height: 300 } },
 ]
 
 export function Dock() {
@@ -48,7 +52,7 @@ export function Dock() {
 
     if (existing.length === 0) {
       // No instance — open new
-      createWindow(item.title, item.Component, {}, item.size?.width, item.size?.height, item.maximiable, item.padding)
+      createWindow(item.title, item.Component, {}, item.size?.width, item.size?.height, item.maximiable, item.padding, item.minSize?.width, item.minSize?.height)
     } else if (existing.length === 1) {
       const win = existing[0]
       if (win.minimized) {

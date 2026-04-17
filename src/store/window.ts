@@ -22,6 +22,8 @@ export interface WindowState {
   y: number
   w: number
   h: number
+  minW: number
+  minH: number
   zIndex: number
   minimized: boolean
   maximized: boolean
@@ -42,6 +44,8 @@ interface WindowStore {
     height?: number,
     maximiable?: boolean,
     padding?: boolean,
+    minW?: number,
+    minH?: number,
   ) => void
   closeWindow: (id: string) => void
   updatePosition: (id: string, x: number, y: number) => void
@@ -70,7 +74,7 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
   focusedId: null,
   _zCounter: 1,
 
-  createWindow: (title, Component, props = {}, width = 320, height = 240, maximiable = true, padding = true) =>
+  createWindow: (title, Component, props = {}, width = 320, height = 240, maximiable = true, padding = true, minW = 200, minH = 120) =>
     set((state) => {
       const vw = window.innerWidth
       const vh = window.innerHeight
@@ -101,7 +105,9 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
             maximized: isSmall,
             preMaxBounds: isSmall ? { x: baseX, y: baseY, w: width, h: height } : null,
             maximiable: maximiable,
-            padding: padding
+            padding: padding,
+            minW,
+            minH,
           },
         ],
       }

@@ -1,6 +1,6 @@
 import { Button } from "./ui/button"
 import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Home, Folder, File } from "lucide-react"
+import { LuChevronLeft, LuChevronRight, LuHouse, LuFolder, LuFile } from "react-icons/lu"
 
 interface FileItem {
   name: string;
@@ -108,7 +108,7 @@ export function FileApp() {
           disabled={history.length === 0}
           className="h-8 w-8 p-0"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <LuChevronLeft className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
@@ -117,7 +117,7 @@ export function FileApp() {
           disabled={future.length === 0}
           className="h-8 w-8 p-0"
         >
-          <ChevronRight className="h-4 w-4" />
+          <LuChevronRight className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
@@ -126,7 +126,7 @@ export function FileApp() {
           disabled={cwd === ''}
           className="h-8 w-8 p-0"
         >
-          <Home className="h-4 w-4" />
+          <LuHouse className="h-4 w-4" />
         </Button>
 
         {/* Breadcrumb Navigation */}
@@ -161,9 +161,9 @@ export function FileApp() {
               >
                 <div className="mb-2">
                   {item.type === 'directory' ? (
-                    <Folder className="h-12 w-12 text-blue-500 group-hover:text-blue-600" />
+                    <LuFolder className="h-12 w-12 text-blue-500 group-hover:text-blue-600" />
                   ) : (
-                    <File className="h-12 w-12 text-gray-500 group-hover:text-gray-600" />
+                    <LuFile className="h-12 w-12 text-gray-500 group-hover:text-gray-600" />
                   )}
                 </div>
                 <div className="text-center">

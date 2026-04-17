@@ -1,11 +1,9 @@
 import { memo, useRef, useCallback, useEffect, useSyncExternalStore } from 'react'
-import { X, Minus, Square, CopyMinus } from 'lucide-react'
+import { LuX, LuMinus, LuSquare, LuCopyMinus } from 'react-icons/lu'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { PAD_T, useWindowStore, type WindowState } from '@/store/window'
 
-const MIN_W = 200
-const MIN_H = 120
 const SMALL_BREAKPOINT = 500
 
 function useIsSmallScreen() {
@@ -37,6 +35,8 @@ export const Window = memo(function Window({
   maximized,
   maximiable,
   padding,
+  minW,
+  minH,
 }: WindowState) {
   const closeWindow = useWindowStore((s) => s.closeWindow)
   const updatePosition = useWindowStore((s) => s.updatePosition)
@@ -169,17 +169,17 @@ export const Window = memo(function Window({
         let ny = startY
 
         if (resizesRight(edge)) {
-          nw = Math.max(MIN_W, startW + dx)
+          nw = Math.max(minW, startW + dx)
         }
         if (resizesLeft(edge)) {
-          nw = Math.max(MIN_W, startW - dx)
+          nw = Math.max(minW, startW - dx)
           nx = startX + startW - nw
         }
         if (resizesBottom(edge)) {
-          nh = Math.max(MIN_H, startH + dy)
+          nh = Math.max(minH, startH + dy)
         }
         if (resizesTop(edge)) {
-          nh = Math.max(MIN_H, startH - dy)
+          nh = Math.max(minH, startH - dy)
           ny = startY + startH - nh
         }
 
@@ -205,7 +205,7 @@ export const Window = memo(function Window({
       el.addEventListener('pointermove', onMove)
       el.addEventListener('pointerup', onUp)
     },
-    [id, maximized, bringToFront, updateSize, updatePosition],
+    [id, maximized, minW, minH, bringToFront, updateSize, updatePosition],
   )
 
   return (
@@ -242,7 +242,7 @@ export const Window = memo(function Window({
               minimizeWindow(id)
             }}
           >
-            <Minus className="size-3.5" />
+            <LuMinus className="size-3.5" />
           </Button>
           {!isSmall && maximiable && (
             <Button
@@ -254,8 +254,8 @@ export const Window = memo(function Window({
               }}
             >
               {maximized
-                ? <CopyMinus className="size-3.5" />
-                : <Square className="size-3" />
+                ? <LuCopyMinus className="size-3.5" />
+                : <LuSquare className="size-3" />
               }
             </Button>
           )}
@@ -267,7 +267,7 @@ export const Window = memo(function Window({
               closeWindow(id)
             }}
           >
-            <X className="size-3.5" />
+            <LuX className="size-3.5" />
           </Button>
         </div>
       </div>

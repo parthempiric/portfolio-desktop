@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Moon, Sun, Monitor, ChevronDown } from 'lucide-react'
+import { LuMoon, LuSun, LuMonitor, LuChevronDown } from 'react-icons/lu'
 import { useTheme } from '@/components/theme-provider'
 import { useWindowStore } from '@/store/window'
 import {
@@ -35,9 +35,9 @@ function Clock() {
 }
 
 const THEME_OPTIONS = [
-  { value: 'light', label: 'Light', icon: Sun },
-  { value: 'dark', label: 'Dark', icon: Moon },
-  { value: 'system', label: 'System', icon: Monitor },
+  { value: 'light', label: 'Light', icon: LuSun },
+  { value: 'dark', label: 'Dark', icon: LuMoon },
+  { value: 'system', label: 'System', icon: LuMonitor },
 ] as const
 
 export function TopPanel() {
@@ -48,7 +48,7 @@ export function TopPanel() {
   const focusedTitle = windows.find((w) => w.id === focusedId && !w.minimized)?.title
 
   const ThemeIcon =
-    theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
+    theme === 'dark' ? LuMoon : theme === 'light' ? LuSun : LuMonitor
 
   return (
     <div
@@ -73,7 +73,7 @@ export function TopPanel() {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs hover:bg-muted outline-none">
           <ThemeIcon className="size-3.5" />
-          <ChevronDown className="size-3" />
+          <LuChevronDown className="size-3" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={4} className="w-40">
           <DropdownMenuGroup>
