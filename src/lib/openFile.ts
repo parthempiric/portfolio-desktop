@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { LuFileText, LuImage } from 'react-icons/lu'
+import { LuALargeSmall, LuImage } from 'react-icons/lu'
 import { useWindowStore } from '@/store/window'
 import { MarkdownApp } from '@/components/MarkdownApp'
 import { ImageApp } from '@/components/ImageApp'
@@ -28,7 +28,7 @@ export function openFile(filePath: string): boolean {
       MarkdownApp as ComponentType<Record<string, unknown>>,
       { filePath, fileName },
       720, 640, true, true, 400, 300,
-      LuFileText,
+      LuALargeSmall,
     )
     return true
   }
