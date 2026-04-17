@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "aasvg": "^0.5.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "node-pty": "^1.1.0",

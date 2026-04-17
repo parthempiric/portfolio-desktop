@@ -6,6 +6,7 @@ import * as os from 'os';
 import * as http from 'http';
 import blogRoutes from './routes/blog';
 import filesRoutes from './routes/files';
+import goatRoutes from './routes/goat';
 
 const app = express();
 app.use(cors());
@@ -15,7 +16,7 @@ app.use(express.json());
 const apiRouter = express.Router();
 apiRouter.use('/blog', blogRoutes);
 apiRouter.use('/files', filesRoutes);
-// You can add more routes here, e.g. apiRouter.use('/projects', projectsRoutes);
+apiRouter.use('/goat', goatRoutes);
 
 app.use('/api', apiRouter);
 

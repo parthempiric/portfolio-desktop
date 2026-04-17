@@ -1,6 +1,8 @@
 import { Button } from "./ui/button"
 import { useState, useEffect } from "react"
 import { LuChevronLeft, LuChevronRight, LuHouse, LuFolder, LuFile } from "react-icons/lu"
+import { useWindowStore } from "@/store/window"
+import { MarkdownApp } from "./MarkdownApp"
 
 interface FileItem {
   name: string;
@@ -15,6 +17,7 @@ export function FileApp() {
   const [history, setHistory] = useState<string[]>([]);
   const [future, setFuture] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const createWindow = useWindowStore((s) => s.createWindow);
 
   const fetchFiles = async (path: string) => {
     setLoading(true);
@@ -38,9 +41,17 @@ export function FileApp() {
   const handleItemClick = (item: FileItem) => {
     if (item.type === 'directory') {
       setHistory(prev => [...prev, cwd]);
-      setFuture([]); // Clear future when navigating forward
+      setFuture([]);
       const newPath = cwd ? `${cwd}/${item.name}` : item.name;
       fetchFiles(newPath);
+    } else if (item.name.endsWith('.md')) {
+      const filePath = cwd ? `${cwd}/${item.name}` : item.name;
+      createWindow(
+        item.name,
+        MarkdownApp as React.ComponentType<Record<string, unknown>>,
+        { filePath, fileName: item.name },
+        720, 640, true, true, 400, 300,
+      );
     }
   };
 

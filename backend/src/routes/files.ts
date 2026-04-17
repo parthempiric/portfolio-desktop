@@ -1,18 +1,21 @@
 import { Router } from 'express';
+import express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
+import { FILES_BASE_PATH } from '../config';
 
 const router = Router();
+
+// Serve files statically from the base path
+router.use('/serve', express.static(FILES_BASE_PATH));
 
 // GET /api/files?path=/some/path
 router.get('/', (req, res) => {
   const requestedPath = req.query.path as string || '';
-  const homeDir = os.homedir();
-  const fullPath = path.join(homeDir, requestedPath);
+  const fullPath = path.resolve(FILES_BASE_PATH, requestedPath);
 
-  // Basic security: ensure the path is within home directory
-  if (!fullPath.startsWith(homeDir)) {
+  // Basic security: ensure the path is within base directory
+  if (!fullPath.startsWith(FILES_BASE_PATH)) {
     return res.status(403).json({ success: false, error: 'Access denied' });
   }
 
