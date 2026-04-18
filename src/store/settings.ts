@@ -5,15 +5,16 @@ export interface AccentColor {
   name: string
   light: string
   dark: string
+  color: string
 }
 
 export const ACCENT_COLORS: AccentColor[] = [
-  { name: 'Purple', light: '#7033ff', dark: '#813d9c' },
-  { name: 'Blue', light: '#2563eb', dark: '#3b82f6' },
-  { name: 'Red', light: '#dc2626', dark: '#ef4444' },
-  { name: 'Orange', light: '#ea580c', dark: '#f97316' },
-  { name: 'Pink', light: '#db2777', dark: '#ec4899' },
-  { name: 'Yellow', light: '#ca8a04', dark: '#eab308' },
+  { name: 'Purple', light: '#7033ff', dark: '#813d9c', color: 'purple' },
+  { name: 'Blue', light: '#2563eb', dark: '#3b82f6', color: 'blue' },
+  { name: 'Red', light: '#dc2626', dark: '#ef4444', color: 'red' },
+  { name: 'Orange', light: '#ea580c', dark: '#f97316', color: 'orange' },
+  { name: 'Pink', light: '#db2777', dark: '#ec4899', color: 'pink' },
+  { name: 'Yellow', light: '#ca8a04', dark: '#eab308', color: 'yellow' },
 ]
 
 export const WALLPAPERS = [

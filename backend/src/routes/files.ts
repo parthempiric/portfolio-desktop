@@ -7,7 +7,9 @@ import { FILES_BASE_PATH } from '../config';
 const router = Router();
 
 // Serve files statically from the base path
-router.use('/serve', express.static(FILES_BASE_PATH));
+router.use('/serve', express.static(FILES_BASE_PATH, {
+  dotfiles: "allow"
+}));
 
 // GET /api/files?path=/some/path
 router.get('/', (req, res) => {

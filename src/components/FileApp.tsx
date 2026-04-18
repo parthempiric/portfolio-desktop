@@ -1,8 +1,9 @@
 import { Button } from "./ui/button"
 import { useState, useEffect } from "react"
-import { LuChevronLeft, LuChevronRight, LuHouse, LuFolder, LuFile } from "react-icons/lu"
+import { LuChevronLeft, LuChevronRight, LuHouse, LuFile } from "react-icons/lu"
 import { openFile } from "@/lib/openFile"
 import api from "@/lib/api"
+import { ACCENT_COLORS, useSettingsStore } from "@/store/settings"
 
 interface FileItem {
   name: string;
@@ -17,6 +18,8 @@ export function FileApp() {
   const [history, setHistory] = useState<string[]>([]);
   const [future, setFuture] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const accentIndex = useSettingsStore(s => s.accentIndex)
+  const systemColor = ACCENT_COLORS[accentIndex].color
 
   const fetchFiles = async (path: string) => {
     setLoading(true);
@@ -150,38 +153,45 @@ export function FileApp() {
       </div>
 
       {/* File Grid */}
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-4 content-start">
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <div className="text-muted-foreground">Loading...</div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-            {files.map((item) => (
-              <div
-                key={item.name}
-                className="group flex flex-col items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/50 cursor-pointer transition-all duration-200 hover:shadow-md"
-                onClick={() => handleItemClick(item)}
-              >
-                <div className="mb-2">
-                  {item.type === 'directory' ? (
-                    <LuFolder className="h-12 w-12 text-blue-500 group-hover:text-blue-600" />
-                  ) : (
-                    <LuFile className="h-12 w-12 text-gray-500 group-hover:text-gray-600" />
-                  )}
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium truncate w-full max-w-30" title={item.name}>
-                    {item.name}
+          <div className="flex flex-wrap gap-2 items-start">
+            {files
+              .filter((f) => !f.name.startsWith('.'))
+              .sort((a, b) => {
+                if (a.type === 'directory' && b.type === 'file') return -1;
+                if (a.type === 'file' && b.type === 'directory') return 1;
+                return a.name.localeCompare(b.name);
+              })
+              .map((item) => (
+                <div
+                  key={item.name}
+                  className="group flex flex-col items-center p-2 rounded-lg w-[88px] hover:bg-primary/10 cursor-pointer transition-colors duration-150 relative"
+                  onClick={() => handleItemClick(item)}
+                >
+                  <div className="mb-1.5 w-12 h-12 flex items-center justify-center pointer-events-none">
+                    {item.type === 'directory' ? (
+                      <img src={`/icons/dir-${systemColor}.svg`} alt="directory" className="w-full h-full object-contain group-hover:scale-105 transition-transform" />
+                    ) : (
+                      <LuFile className="h-10 w-10 text-foreground/50 group-hover:text-foreground/70 group-hover:scale-105 transition-all" />
+                    )}
                   </div>
-                  {item.type === 'file' && item.size !== null && (
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {formatSize(item.size)}
+                  <div className="text-center w-full pointer-events-none">
+                    <div className="text-[11px] leading-tight font-medium text-foreground line-clamp-2 break-all" title={item.name}>
+                      {item.name}
                     </div>
-                  )}
+                    {item.type === 'file' && item.size !== null && (
+                      <div className="text-[9px] text-muted-foreground mt-0.5">
+                        {formatSize(item.size)}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

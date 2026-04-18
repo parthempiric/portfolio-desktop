@@ -14,6 +14,7 @@
   "dependencies": {
     "aasvg": "^0.5.2",
     "cors": "^2.8.6",
+    "dotconfig": "^0.0.1-security",
     "express": "^5.2.1",
     "music-metadata": "^11.12.3",
     "node-pty": "^1.1.0",

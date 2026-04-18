@@ -239,7 +239,7 @@ export const Window = memo(function Window({
         </span>
         <div className="flex gap-1">
           <Button
-            variant="outline"
+            variant="titleBar"
             size="icon-xs"
             onClick={(e) => {
               e.stopPropagation()
@@ -250,7 +250,7 @@ export const Window = memo(function Window({
           </Button>
           {!isSmall && maximiable && (
             <Button
-              variant="outline"
+              variant="titleBar"
               size="icon-xs"
               onClick={(e) => {
                 e.stopPropagation()
@@ -264,7 +264,7 @@ export const Window = memo(function Window({
             </Button>
           )}
           <Button
-            variant="outline"
+            variant="titleBar"
             size="icon-xs"
             onClick={(e) => {
               e.stopPropagation()
@@ -283,7 +283,7 @@ export const Window = memo(function Window({
           "p-4": padding
         }
       )}>
-        <Component {...props} winId={id}/>
+        <Component {...props} winId={id} />
       </div>
 
       {/* Resize handles — hidden when maximized */}

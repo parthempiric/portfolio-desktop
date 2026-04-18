@@ -87,7 +87,7 @@ export const MusicExtrantion = () => {
                             <img src={musicConfig.cover} alt="" className="h-full w-full object-cover" />
                         ) : (
                             <div className="flex items-center justify-center w-full h-full bg-primary/20">
-                                <LuMusic2 className="text-primary text-xl" />
+                                <LuMusic2 className="text-white text-xl" />
                             </div>
                         )
                     }
