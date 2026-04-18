@@ -7,6 +7,7 @@ import * as http from 'http';
 import blogRoutes from './routes/blog';
 import filesRoutes from './routes/files';
 import goatRoutes from './routes/goat';
+import musicRoutes from './routes/music';
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ const apiRouter = express.Router();
 apiRouter.use('/blog', blogRoutes);
 apiRouter.use('/files', filesRoutes);
 apiRouter.use('/goat', goatRoutes);
+apiRouter.use('/music', musicRoutes)
 
 app.use('/api', apiRouter);
 

@@ -124,7 +124,7 @@ export function SettingsApp() {
       {/* Wallpaper */}
       <section className="space-y-2">
         <h3 className="font-semibold">Wallpaper</h3>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {WALLPAPERS.map((wp) => (
             <button
               key={wp.name}

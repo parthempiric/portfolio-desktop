@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import { useEffect, useState, type ComponentType } from 'react'
 import { LuFileText, LuInfo, LuSettings, LuTerminal, LuUser, LuFileQuestion } from 'react-icons/lu'
 import { cn } from '@/lib/utils'
 import { useWindowStore } from '@/store/window'
@@ -13,6 +13,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useDockStore } from '@/store/dock'
+import { MusicExtrantion } from './dock/Music'
 
 interface DockItem {
   title: string
@@ -45,6 +47,7 @@ export function Dock() {
   const bringToFront = useWindowStore((s) => s.bringToFront)
   const minimizeWindow = useWindowStore((s) => s.minimizeWindow)
   const restoreWindow = useWindowStore((s) => s.restoreWindow)
+  const dockExtrantion = useDockStore((s) => s.extrantion)
 
   const handleClick = (item: DockItem) => {
     // Find existing windows of this app
@@ -79,102 +82,112 @@ export function Dock() {
   const dockTitles = DOCK_ITEMS.map((i) => i.title)
   const otherWindows = windows.filter((w) => !dockTitles.includes(w.title))
 
+
+
   return (
     <TooltipProvider delay={0}>
-      <div
-        className="absolute bottom-1.25 left-1/2 z-9999 flex -translate-x-1/2 items-end gap-1 rounded-lg border border-border bg-card px-2 py-1.5"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        {DOCK_ITEMS.map((item) => {
-          const running = windows.filter((w) => w.title === item.title)
-          const isActive = running.some((w) => w.id === focusedId && !w.minimized)
-          const Icon = item.icon
+      <div className={cn(
+        'absolute bottom-1.25 w-full flex justify-center gap-2 px-1.5',
+      )}>
+        <div
+          className=" z-9999 flex items-end gap-1 rounded-lg border border-border bg-card px-2 py-1.5"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          {DOCK_ITEMS.map((item) => {
+            const running = windows.filter((w) => w.title === item.title)
+            const isActive = running.some((w) => w.id === focusedId && !w.minimized)
+            const Icon = item.icon
 
-          return (
-            <Tooltip key={item.title}>
-              <TooltipTrigger
-                render={
-                  <button
-                    onClick={() => handleClick(item)}
-                    className={cn(
-                      'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
-                      isActive
-                        ? 'bg-primary/15 text-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                    )}
-                  >
-                    <Icon className="size-5" />
+            return (
+              <Tooltip key={item.title}>
+                <TooltipTrigger
+                  render={
+                    <button
+                      onClick={() => handleClick(item)}
+                      className={cn(
+                        'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
+                        isActive
+                          ? 'bg-primary/15 text-primary'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      )}
+                    >
+                      <Icon className="size-5" />
 
-                    {/* Running indicator dots */}
-                    {running.length > 0 && (
-                      <div className="absolute -bottom-0.5 flex gap-0.5">
-                        {running.slice(0, 3).map((w) => (
-                          <span
-                            key={w.id}
-                            className={cn(
-                              'size-1 rounded-full',
-                              w.id === focusedId && !w.minimized
-                                ? 'bg-primary'
-                                : 'bg-muted-foreground',
-                            )}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </button>
-                }
-              />
-              <TooltipContent sideOffset={8}>{item.title}</TooltipContent>
-            </Tooltip>
-          )
-        })}
-
-        {/* Separator + dynamic windows */}
-        {otherWindows.length > 0 && (
-          <>
-            <div className="mx-0.5 h-8 w-px self-center bg-border" />
-            {otherWindows.map((win) => {
-              const isActive = win.id === focusedId && !win.minimized
-              const WinIcon = win.icon || LuFileQuestion
-              return (
-                <Tooltip key={win.id}>
-                  <TooltipTrigger
-                    render={
-                      <button
-                        onClick={() => {
-                          if (win.minimized) {
-                            restoreWindow(win.id)
-                          } else if (focusedId === win.id) {
-                            minimizeWindow(win.id)
-                          } else {
-                            bringToFront(win.id)
-                          }
-                        }}
-                        className={cn(
-                          'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
-                          isActive
-                            ? 'bg-primary/15 text-primary'
-                            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                        )}
-                      >
-                        <WinIcon className="size-5" />
+                      {/* Running indicator dots */}
+                      {running.length > 0 && (
                         <div className="absolute -bottom-0.5 flex gap-0.5">
-                          <span
-                            className={cn(
-                              'size-1 rounded-full',
-                              isActive ? 'bg-primary' : 'bg-muted-foreground',
-                            )}
-                          />
+                          {running.slice(0, 3).map((w) => (
+                            <span
+                              key={w.id}
+                              className={cn(
+                                'size-1 rounded-full',
+                                w.id === focusedId && !w.minimized
+                                  ? 'bg-primary'
+                                  : 'bg-muted-foreground',
+                              )}
+                            />
+                          ))}
                         </div>
-                      </button>
-                    }
-                  />
-                  <TooltipContent sideOffset={8}>{win.title}</TooltipContent>
-                </Tooltip>
-              )
-            })}
-          </>
-        )}
+                      )}
+                    </button>
+                  }
+                />
+                <TooltipContent sideOffset={8}>{item.title}</TooltipContent>
+              </Tooltip>
+            )
+          })}
+
+          {/* Separator + dynamic windows */}
+          {otherWindows.length > 0 && (
+            <>
+              <div className="mx-0.5 h-8 w-px self-center bg-border" />
+              {otherWindows.map((win) => {
+                const isActive = win.id === focusedId && !win.minimized
+                const WinIcon = win.icon || LuFileQuestion
+                return (
+                  <Tooltip key={win.id}>
+                    <TooltipTrigger
+                      render={
+                        <button
+                          onClick={() => {
+                            if (win.minimized) {
+                              restoreWindow(win.id)
+                            } else if (focusedId === win.id) {
+                              minimizeWindow(win.id)
+                            } else {
+                              bringToFront(win.id)
+                            }
+                          }}
+                          className={cn(
+                            'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
+                            isActive
+                              ? 'bg-primary/15 text-primary'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                          )}
+                        >
+                          <WinIcon className="size-5" />
+                          <div className="absolute -bottom-0.5 flex gap-0.5">
+                            <span
+                              className={cn(
+                                'size-1 rounded-full',
+                                isActive ? 'bg-primary' : 'bg-muted-foreground',
+                              )}
+                            />
+                          </div>
+                        </button>
+                      }
+                    />
+                    <TooltipContent sideOffset={8}>{win.title}</TooltipContent>
+                  </Tooltip>
+                )
+              })}
+            </>
+          )}
+        </div>
+
+        {
+          dockExtrantion == "music" && <MusicExtrantion />
+        }
       </div>
     </TooltipProvider>
   )
