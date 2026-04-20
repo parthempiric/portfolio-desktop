@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react'
-import { LuFileText, LuInfo, LuSettings, LuTerminal, LuUser, LuFileQuestion } from 'react-icons/lu'
+import { LuFileText, LuInfo, LuSettings, LuTerminal, LuUser, LuFileQuestion, LuSticker } from 'react-icons/lu'
 import { cn } from '@/lib/utils'
 import { useWindowStore } from '@/store/window'
 import { FileApp } from '@/components/FileApp'
@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useDockStore } from '@/store/dock'
+import { useStickerStore } from '@/store/sticker'
 import { MusicExtrantion } from './dock/Music'
 
 interface DockItem {
@@ -48,6 +49,8 @@ export function Dock() {
   const minimizeWindow = useWindowStore((s) => s.minimizeWindow)
   const restoreWindow = useWindowStore((s) => s.restoreWindow)
   const dockExtrantion = useDockStore((s) => s.extrantion)
+  const stickerActive = useStickerStore((s) => s.active)
+  const toggleSticker = useStickerStore((s) => s.toggleActive)
 
   const handleClick = (item: DockItem) => {
     // Find existing windows of this app
@@ -136,6 +139,26 @@ export function Dock() {
               </Tooltip>
             )
           })}
+
+          {/* Sticker tool */}
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <button
+                  onClick={toggleSticker}
+                  className={cn(
+                    'cursor-pointer relative flex size-10 items-center justify-center rounded-lg transition-all duration-150',
+                    stickerActive
+                      ? 'bg-primary/15 text-primary'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                  )}
+                >
+                  <LuSticker className="size-5" />
+                </button>
+              }
+            />
+            <TooltipContent sideOffset={8}>Stickers</TooltipContent>
+          </Tooltip>
 
           {/* Separator + dynamic windows */}
           {otherWindows.length > 0 && (
