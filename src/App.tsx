@@ -4,6 +4,7 @@ import { WindowLayer } from '@/components/WindowLayer'
 import { TopPanel } from '@/components/TopPanel'
 import { Dock } from '@/components/Dock'
 import { Splash } from '@/components/Splash'
+import { DesktopIcons } from '@/components/DesktopIcons'
 import { useWindowStore } from '@/store/window'
 import {
   useSettingsStore,
@@ -68,6 +69,9 @@ function App() {
     >
       {/* GNOME top panel */}
       <TopPanel />
+
+      {/* Desktop icons */}
+      <DesktopIcons />
 
       {/* Window layer */}
       <WindowLayer />

@@ -12,7 +12,7 @@ interface FileItem {
   modified: string;
 }
 
-export function FileApp() {
+export function FileApp({ initialPath }: { initialPath?: string }) {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [cwd, setCwd] = useState('');
   const [history, setHistory] = useState<string[]>([]);
@@ -36,7 +36,7 @@ export function FileApp() {
   };
 
   useEffect(() => {
-    fetchFiles('');
+    fetchFiles(initialPath || '');
   }, []);
 
   const handleItemClick = (item: FileItem) => {
@@ -108,24 +108,26 @@ export function FileApp() {
     <div className="h-full flex flex-col bg-background">
       {/* Navigation Bar - Fixed at top */}
       <div className="flex items-center gap-2 p-4 border-b bg-card/50 backdrop-blur-sm">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleBack}
-          disabled={history.length === 0}
-          className="h-8 w-8 p-0"
-        >
-          <LuChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleForward}
-          disabled={future.length === 0}
-          className="h-8 w-8 p-0"
-        >
-          <LuChevronRight className="h-4 w-4" />
-        </Button>
+        <div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleBack}
+            disabled={history.length === 0}
+            className="h-8 w-8 p-0 border-r-0 rounded-r-none"
+          >
+            <LuChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleForward}
+            disabled={future.length === 0}
+            className="h-8 w-8 p-0 border-l-0 rounded-l-none"
+          >
+            <LuChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
         <Button
           variant="outline"
           size="sm"
